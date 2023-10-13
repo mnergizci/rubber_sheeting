@@ -16,7 +16,7 @@ sslc=$rslcdir/$s/$s.rslc
 mmli=$rslcdir/$m/$m.rslc.mli.par
 smli=$rslcdir/$s/$s.rslc.mli.par
 
-SLC_interp_lt_ScanSAR tab/${s}R_tab $spar tab/${m}R_tab $mpar OFF/$pair/offsets.filtered.lut $mmli $smli OFF/$pair/tracking.off tab/20230210rsR_tab $outdir/$s/$s.rlsc $outdir/$s/$s.rlsc.par - 6 $outdir/$s/
+SLC_interp_lt_ScanSAR tab/${s}R_tab $spar tab/${m}R_tab $mpar OFF/$pair/offsets.filtered.lut $mmli $smli OFF/$pair/tracking.off tab/20230210rsR_tab $outdir/$s/$s.rslc $outdir/$s/$s.rslc.par - 6 $outdir/$s/
 
 cd $outdir/$s; chmod 777 *
 echo $s.rslc $s.rslc.par $s.rslc.mli $s.rslc.mli.par
