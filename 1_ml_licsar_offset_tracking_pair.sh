@@ -64,29 +64,43 @@ for x in $m $s; do
  if [ ! -f tab/$x'R_tab' ]; then
   createSLCtab_frame RSLC/$x/$x rslc $frame > tab/$x'R_tab'
  fi
-## extd='.deramp'
-## if [ ! -f RSLC/$x/$x.rslc.deramp ]; then
-##  if [ -z `which ScanSAR_deramp_2nd.py 2>/dev/null` ]; then echo "WARNING, old GAMMA - no deramping (but ok if no oversampling)";
-##   extd=''
-##  else
-##   echo "deramping "$x". ETA: 1 minute"
-##   ScanSAR_deramp_2nd.py tab/$x'R_tab' $x tab/$master'_tab' 20 4 1 >/dev/null
-##   mv $x.rslc.deramp $x.rslc.deramp.par RSLC/$x/. 
-##  fi
-## fi'''
+ extd='.deramp'
+ if [ ! -f RSLC/$x/$x.rslc.deramp ]; then
+  if [ -z `which ScanSAR_deramp_2nd.py 2>/dev/null` ]; then echo "WARNING, old GAMMA - no deramping (but ok if no oversampling)";
+   extd=''
+  else
+   echo "deramping "$x". ETA: 1 minute"
+   ScanSAR_deramp_2nd.py tab/$x'R_tab' $x tab/$master'_tab' 20 4 1 >/dev/null
+   mv $x.rslc.deramp $x.rslc.deramp.par RSLC/$x/. 
+  fi
+ fi 
 done
 
 echo 'here we go'
 # ok ok, so now i do only the deramped...
 #e.g., for the test_EQ_tur:
 #cd /gws/nopw/j04/nceo_geohazards_vol1/projects/LiCS/proc/current/subsets/test_tur_rs/021D
-time offset_pwr_tracking RSLC/$m/$m.rslc RSLC/$s/$s.rslc RSLC/$m/$m.rslc.par RSLC/$s/$s.rslc.par $outdir/tracking.off $outdir/tracking.offsets $outdir/tracking.corr 128 64 - 1 0.2 20 4 - - - - - - 0 1 - - $outdir/tracking.corrstd >/dev/null
+
+###first attempt,oversample is 1 according to recommendation of Milan, ~830m
+time offset_pwr_tracking RSLC/$m/$m.rslc RSLC/$s/$s.rslc RSLC/$m/$m.rslc.par RSLC/$s/$s.rslc.par $outdir/tracking.off $outdir/tracking.offsets $outdir/tracking.corr 128 128 - 1 0.2 20 4 - - - - - - 0 1 - - $outdir/tracking.corrstd >/dev/null
+
+###second attempt, ~413m
+#time offset_pwr_tracking RSLC/$m/$m.rslc RSLC/$s/$s.rslc RSLC/$m/$m.rslc.par RSLC/$s/$s.rslc.par $outdir/tracking.off $outdir/tracking.offsets $outdir/tracking.corr 128 64 - 2 0.2 20 4 - - - - - - 0 1 - - $outdir/tracking.corrstd >/dev/null
+
+##third attempt ~80m
+#time offset_pwr_tracking RSLC/$m/$m.rslc RSLC/$s/$s.rslc RSLC/$m/$m.rslc.par RSLC/$s/$s.rslc.par $outdir/tracking.off $outdir/tracking.offsets $outdir/tracking.corr 64 64 - 1 0.1 20 4 - - - - - - 0 1 - - $outdir/tracking.corrstd >/dev/null
+
+##fourth time ~375m
+#time offset_pwr_tracking RSLC/$m/$m.rslc RSLC/$s/$s.rslc RSLC/$m/$m.rslc.par RSLC/$s/$s.rslc.par $outdir/tracking.off $outdir/tracking.offsets $outdir/tracking.corr 128 128 - 1 0.2 20 4 - - - - - - 1 1 - - $outdir/tracking.corrstd >/dev/null
+
+##fifth time ~379m, deramping is on with deramped rslc
+#time offset_pwr_tracking RSLC/$m/$m.rslc.deramp RSLC/$s/$s.rslc.deramp RSLC/$m/$m.rslc.deramp.par RSLC/$s/$s.rslc.deramp.par $outdir/tracking.off $outdir/tracking.offsets $outdir/tracking.corr 128 64 - 2 0.2 20 4 - - - - - - 1 1 - - $outdir/tracking.corrstd >/dev/null
 
 
 # only 1 oversample
 #time offset_pwr_tracking RSLC/$m/$m.rslc$extd RSLC/$s/$s.rslc$extd RSLC/$m/$m.rslc$extd.par RSLC/$s/$s.rslc$extd.par $outdir/tracking.off $outdir/tracking.offsets $outdir/tracking.corr 128 64 - 2 0.1 40 16 - - - - - - 0 1 - - $outdir/tracking.corrstd >/dev/null
 # 2^2 oversample
-#time offset_pwr_tracking RSLC/$m/$m.rslc.deramp RSLC/$s/$s.rslc.deramp RSLC/$m/$m.rslc.deramp.par RSLC/$s/$s.rslc.deramp.par $outdir/tracking.off $outdir/tracking.offsets $outdir/tracking.corr 64 32 - 2 - >/dev/null
+#time offset_pwr_tracking RSLC/$m/$m.rslc.deramp RSLC/$s/$s.rslc.deramp RSLC/$m/$m.rslc.deramp.par RSLC/$s/$s.rslc.deramp.par $outdir/tracking.off $outdir/tracking.offsets $outdir/tracking.corr 128 64 - 2 0.2 20 4 - - - - - - 1 1 - - $outdir/tracking.corrstd >/dev/null
 # after Yasser's check: actually gives very very similar result as without deramping! but it is correct to deramp - as only then we can properly oversample, as i tested.
 # so will keep deramp, but only 2^1 oversample, since the 2^2 took much more time and no visible improvement, except for higher resolution
 #time offset_pwr_tracking $mslc $sslc $mpar $spar $outdir/tracking.off $outdir/tracking.offsets $outdir/tracking.corr 64 32 - 1 - #>/dev/null
