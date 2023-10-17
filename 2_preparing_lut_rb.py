@@ -316,10 +316,10 @@ with open(off_par, "r") as off:
             lenr = np.int64(line_list[1])
         elif 'offset_estimation_azimuth_samples:' in line_list:
             lena = np.int64(line_list[1])
-        elif 'interferogram_range_pixel_spacing:' in line_list:
-            rngres = np.float64(line_list[1])
-        elif 'interferogram_azimuth_pixel_spacing:' in line_list:
-            azires = np.float64(line_list[1])
+        #elif 'interferogram_range_pixel_spacing:' in line_list:
+        #    rngres = np.float64(line_list[1])
+        #elif 'interferogram_azimuth_pixel_spacing:' in line_list:
+        #    azires = np.float64(line_list[1])
         elif 'offset_estimation_range_spacing:' in line_list:
             mlrng = np.float64(line_list[1])
         elif 'offset_estimation_azimuth_spacing:' in line_list:
@@ -332,7 +332,8 @@ with open(off_par, "r") as off:
             outlenrng = np.int64(line_list[1])
 
 thresm=5.5
-
+rngres=2.329562
+azires=14.00
 
 
 ### Reading the offset which is the complexdata
@@ -354,15 +355,12 @@ azi = xr.DataArray(
 )
 
 print('1, Zero Filtering ')
-
 rng=rng.where(rng!=0)
 azi=azi.where(azi!=0)
-
 
 print('2,thresholding of azimuth and range to remove outlier. ')
 rng=rng.where(np.abs(rng)<thresm/rngres)
 azi=azi.where(np.abs(azi)<thresm/azires)
-
 # but also those cross-errors:
 rng=rng.where(np.abs(azi)<thresm/azires)
 azi=azi.where(np.abs(rng)<thresm/rngres)
@@ -370,10 +368,6 @@ azi=azi.where(np.abs(rng)<thresm/rngres)
 print("3, remove_islands function doesn't work in terminal ask Milan!")
 #rng.values=remove_islands(rng.values, pixelsno = 25)
 #azi.values=remove_islands(azi.values, pixelsno = 25)
-print('4')
-
-print('5')
-
 
 print('Thresholding has just finished. The filtering step is going to start.')
 
@@ -399,9 +393,9 @@ tac()
 print('Histogram filtering takes time;therefore. simple median filtering is running as a test. IF the code doesnt give error please apply histogram filtering (but it takes time like 12h).')
 
 azi_filt_64=apply_median_filter(azi, 64)
-rng_filt_16 = apply_median_filter(rng, 16)
+rng_filt_32 = apply_median_filter(rng, 32)
 outazi=azi_filt_64
-outrng=rng_filt_16
+outrng=rng_filt_32
 
 # STORING DATA
 outcpx = outrng.fillna(0).values + 1j* outazi.fillna(0).values
