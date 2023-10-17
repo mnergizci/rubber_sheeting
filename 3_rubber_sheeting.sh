@@ -46,7 +46,7 @@ multi_look $rslcdir/$s/$s.rslc $rslcdir/$s/$s.rslc.par $rslcdir/$s/$s.rslc.mli $
 chmod 777 $rslcdir/$s/*
 
 echo '22222222222222'
-SLC_mosaic_ScanSAR tab/${s}R_tab $rslcdir/$s/$s.rslc $rslcdir/$s/$s.rslc.par 20 4 1 $rslcdir/$m/$m.rslc.par 
+SLC_mosaic_ScanSAR tab/${s}R_tab $rslcdir/$s/$s.rslc $rslcdir/$s/$s.rslc.par 20 4 1 tab/${m}R_tab 
 chmod 777 $rslcdir/$s/*
 
 echo '3333333333333'
