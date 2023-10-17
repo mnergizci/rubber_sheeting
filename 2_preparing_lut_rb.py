@@ -4,7 +4,6 @@
 # LOADING FUNCTIONS
 from lics_unwrap import *
 import dask.array as da
-#import dask_ndfilters as ndfilters    # use this if the below doesn't work!
 from dask_image import ndfilters
 import sys
 import os
@@ -241,9 +240,6 @@ def calculate_gradient(xar, deramp=False):
 
 
 
-
-
-
 '''
 The functions are defined above. The process starts from here.
 '''
@@ -303,7 +299,6 @@ outlutfilefull=os.path.join(pair_path,'offsets.filtered.lut.full')
 
 
 print('The offset parameters has been extracting')
-
 with open(off_par, "r") as off:
     for line in off:
         # Strip leading and trailing whitespace from the line
