@@ -5,7 +5,7 @@
 m=`echo $1 | cut -d '_' -f1`
 s=`echo $1 | cut -d '_' -f2`
 pair=$1
-outdir='RSLCRS_6'
+outdir='RSLCRS'
 mkdir -p $outdir
 mkdir -p $outdir/$s
 rslcdir=`pwd`/RSLC
@@ -34,12 +34,12 @@ cd ../..
 
 echo $pair >ifg.list
 
-if [ ! -d IFG/${m}_${s}.remove ]; then
- cd IFG; mv $m'_'$s $m'_'$s.remove; mkdir $m'_'$s; cd ../
+if [ ! -d IFG/${m}_${s}.orig ]; then
+ cd IFG; mv $m'_'$s $m'_'$s.orig; mkdir $m'_'$s; cd ../
 fi
 
-if [ ! -d RSLC/${s}.remove ]; then
- cd RSLC; mv $s $s.remove; ln -s ../$outdir/$s; cd ../
+if [ ! -d RSLC/${s}.orig ]; then
+ cd RSLC; mv $s $s.orig; ln -s ../$outdir/$s; cd ../
 fi
 
 echo '11111111111111'
