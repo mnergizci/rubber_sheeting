@@ -5,7 +5,7 @@
 m=`echo $1 | cut -d '_' -f1`
 s=`echo $1 | cut -d '_' -f2`
 pair=$1
-outdir='RSLCRS'
+outdir='RSLCRS_6'
 mkdir -p $outdir
 mkdir -p $outdir/$s
 rslcdir=`pwd`/RSLC
@@ -18,6 +18,7 @@ smli=$rslcdir/$s/$s.rslc.mli.par
 
 ###interp for burst overlap
 SLC_interp_lt_ScanSAR tab/${s}R_tab $spar tab/${m}R_tab $mpar OFF/$pair/offsets.filtered.lut $mmli $smli OFF/$pair/tracking.off tab/20230210rsR_tab $outdir/$s/$s.rslc $outdir/$s/$s.rslc.par - 6 $outdir/$s/
+
 
 ###normal interp without producing swath par files
 #SLC_interp_lt $rslcdir/$s/$s.rslc $rslcdir/$m/$m.rslc.par $rslcdir/$s/$s.rslc.par OFF/$pair/offsets.filtered.lut $mmli $smli - $outdir/$s/$s.rslc $outdir/$s/$s.rslc.par - - 5
@@ -33,29 +34,31 @@ cd ../..
 
 echo $pair >ifg.list
 
-if [ ! -d IFG/${m}_${s}.orig ]; then
- cd IFG; mv $m'_'$s $m'_'$s.orig; mkdir $m'_'$s; cd ../
+if [ ! -d IFG/${m}_${s}.remove ]; then
+ cd IFG; mv $m'_'$s $m'_'$s.remove; mkdir $m'_'$s; cd ../
 fi
 
-if [ ! -d RSLC/${s}.orig ]; then
- cd RSLC; mv $s $s.orig; ln -s ../$outdir/$s; cd ../
+if [ ! -d RSLC/${s}.remove ]; then
+ cd RSLC; mv $s $s.remove; ln -s ../$outdir/$s; cd ../
 fi
 
 echo '11111111111111'
 multi_look $rslcdir/$s/$s.rslc $rslcdir/$s/$s.rslc.par $rslcdir/$s/$s.rslc.mli $rslcdir/$s/$s.rslc.mli.par 20 4
 chmod 777 $rslcdir/$s/*
 
-echo '22222222222222'
-SLC_mosaic_ScanSAR tab/${s}R_tab $rslcdir/$s/$s.rslc $rslcdir/$s/$s.rslc.par 20 4 1 tab/${m}R_tab 
-chmod 777 $rslcdir/$s/*
-
-echo '3333333333333'
-multi_look $rslcdir/$s/$s.rslc $rslcdir/$s/$s.rslc.par $rslcdir/$s/$s.rslc.mli $rslcdir/$s/$s.rslc.mli.par 20 4
+#echo '22222222222222'
+#SLC_mosaic_ScanSAR tab/${s}R_tab $rslcdir/$s/$s.rslc $rslcdir/$s/$s.rslc.par 20 4 1 tab/${m}R_tab
+#chmod 777 $rslcdir/$s/*
+#echo '3333333333333'
+#multi_look $rslcdir/$s/$s.rslc $rslcdir/$s/$s.rslc.par $rslcdir/$s/$s.rslc.mli $rslcdir/$s/$s.rslc.mli.par 20 4
 
 mkdir -p log
 LiCSAR_03_mk_ifgs.py -d . -i ifg.list -a 4 -r 20
 
 create_geoctiffs_to_pub.sh `pwd` $pair
+
+create_bovl_ifg.sh $pair
+
 #rm RSLC/$s; mv RSLC/$s.orig RSLC/$s
 
 
