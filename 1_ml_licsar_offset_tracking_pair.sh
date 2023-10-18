@@ -64,16 +64,16 @@ for x in $m $s; do
  if [ ! -f tab/$x'R_tab' ]; then
   createSLCtab_frame RSLC/$x/$x rslc $frame > tab/$x'R_tab'
  fi
- extd='.deramp'
- if [ ! -f RSLC/$x/$x.rslc.deramp ]; then
-  if [ -z `which ScanSAR_deramp_2nd.py 2>/dev/null` ]; then echo "WARNING, old GAMMA - no deramping (but ok if no oversampling)";
-   extd=''
-  else
-   echo "deramping "$x". ETA: 1 minute"
-   ScanSAR_deramp_2nd.py tab/$x'R_tab' $x tab/$master'_tab' 20 4 1 >/dev/null
-   mv $x.rslc.deramp $x.rslc.deramp.par RSLC/$x/. 
-  fi
- fi 
+# extd='.deramp'
+# if [ ! -f RSLC/$x/$x.rslc.deramp ]; then
+#  if [ -z `which ScanSAR_deramp_2nd.py 2>/dev/null` ]; then echo "WARNING, old GAMMA - no deramping (but ok if no oversampling)";
+#   extd=''
+#  else
+#   echo "deramping "$x". ETA: 1 minute"
+#   ScanSAR_deramp_2nd.py tab/$x'R_tab' $x tab/$master'_tab' 20 4 1 >/dev/null
+#   mv $x.rslc.deramp $x.rslc.deramp.par RSLC/$x/. 
+#  fi
+# fi 
 done
 
 echo 'here we go'
